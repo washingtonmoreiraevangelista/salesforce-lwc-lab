@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Dias_Restantes__c</fullName>
+    <description>Calcula quantos dias faltam até a data limite.</description>
+    <externalId>false</externalId>
+    <formula>IF(
+    OR(
+        ISBLANK(Data_Limite__c),
+        ISPICKVAL(Status__c, &quot;Concluída&quot;),
+        ISPICKVAL(Status__c, &quot;Rejeitada&quot;)
+    ),
+    NULL,
+    Data_Limite__c - TODAY()
+)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Dias Restantes -</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

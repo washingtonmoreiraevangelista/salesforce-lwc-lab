@@ -1,0 +1,21 @@
+
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label>Solicitação</label>
+    <pluralLabel>Solicitações</pluralLabel>
+    <description>Gerencia as solicitações cadastradas no sistema, incluindo solicitante, responsável, prioridade e status.</description>
+    <nameField>
+        <label>Nome da Solicitação</label>
+        <type>Text</type>
+    </nameField>
+    <enableBulkApi>true</enableBulkApi>
+    <enableSharing>true</enableSharing>
+    <enableStreamingApi>true</enableStreamingApi>
+    <enableHistory>true</enableHistory>
+    <enableActivities>false</enableActivities>
+    <enableSearch>true</enableSearch>
+    <enableFeeds>false</enableFeeds>
+    <enableReports>true</enableReports>
+    <sharingModel>ReadWrite</sharingModel>
+    <deploymentStatus>Deployed</deploymentStatus>
+</CustomObject>

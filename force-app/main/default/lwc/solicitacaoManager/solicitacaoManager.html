@@ -1,0 +1,385 @@
+
+<template>
+    <lightning-card
+        title="Gerenciador de Solicitações"
+        icon-name="standard:record">
+
+        <!-- Painel de indicadores. -->
+         <template if:true={ehResponsavel}>
+
+        <div class="slds-grid slds-wrap slds-gutters slds-p-around_medium">
+
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-5 slds-m-bottom_small">
+                <lightning-card title="Total">
+                    <div class="slds-p-around_medium slds-text-align_center">
+                        <p class="slds-text-heading_large">{indicadores.total}</p>
+                    </div>
+                </lightning-card>
+            </div>
+
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-5 slds-m-bottom_small">
+                <lightning-card title="Pendentes">
+                    <div class="slds-p-around_medium slds-text-align_center">
+                        <p class="slds-text-heading_large">{indicadores.pendentes}</p>
+                    </div>
+                </lightning-card>
+            </div>
+
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-5 slds-m-bottom_small">
+                <lightning-card title="Urgentes">
+                    <div class="slds-p-around_medium slds-text-align_center">
+                        <p class="slds-text-heading_large">{indicadores.urgentes}</p>
+                    </div>
+                </lightning-card>
+            </div>
+
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-5 slds-m-bottom_small">
+                <lightning-card title="Aprovadas">
+                    <div class="slds-p-around_medium slds-text-align_center">
+                        <p class="slds-text-heading_large">{indicadores.aprovadas}</p>
+                    </div>
+                </lightning-card>
+            </div>
+
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-5 slds-m-bottom_small">
+                <lightning-card title="Canceladas">
+                    <div class="slds-p-around_medium slds-text-align_center">
+                        <p class="slds-text-heading_large">{indicadores.canceladas}</p>
+                    </div>
+                </lightning-card>
+            </div>
+            
+        </div>
+    </template>
+
+        <!-- Filtros, pesquisa e botão de cadastro. -->
+        <div class="slds-grid slds-wrap slds-gutters slds-grid_vertical-align-end slds-p-horizontal_medium slds-p-bottom_medium">
+
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_5-of-12">
+                <lightning-input
+                    type="search"
+                    label="Pesquisar solicitações"
+                    placeholder="Digite o nome da solicitação..."
+                    value={termoPesquisa}
+                    onchange={handleSearch}>
+                </lightning-input>
+            </div>
+            
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_2-of-12">
+                <lightning-combobox
+                    name="filtroStatus"
+                    label="Status"
+                    value={filtroStatus}
+                    options={opcoesFiltroStatus}
+                    onchange={handleFiltroStatus}>
+                </lightning-combobox>
+            </div>
+
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_2-of-12">
+                <lightning-combobox
+                    name="filtroPrioridade"
+                    label="Prioridade"
+                    value={filtroPrioridade}
+                    options={opcoesFiltroPrioridade}
+                    onchange={handleFiltroPrioridade}>
+                </lightning-combobox>
+            </div>
+
+        
+
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_3-of-12">
+                <lightning-button
+                    label="Nova Solicitação"
+                    variant="brand"
+                    icon-name="utility:add"
+                    onclick={handleNovaSolicitacao}>
+                </lightning-button>
+            </div>
+
+        </div>
+
+        <!-- Modal de cadastro e edição. -->
+        <template lwc:if={mostrarFormulario}>
+            <section
+                role="dialog"
+                tabindex="-1"
+                aria-modal="true"
+                aria-labelledby="titulo-modal"
+                class="slds-modal slds-fade-in-open">
+
+                <div class="slds-modal__container">
+
+                    <header class="slds-modal__header">
+                        <lightning-button-icon
+                            icon-name="utility:close"
+                            alternative-text="Fechar"
+                            title="Fechar"
+                            variant="bare-inverse"
+                            class="slds-modal__close"
+                            onclick={handleFecharModal}>
+                        </lightning-button-icon>
+
+                        <h2
+                            id="titulo-modal"
+                            class="slds-text-heading_medium">
+                            {tituloFormulario}
+                        </h2>
+
+                        <p class="slds-m-top_x-small slds-text-color_weak">
+                            Preencha os dados para registrar uma solicitação.
+                        </p>
+                    </header>
+
+                    <div class="slds-modal__content slds-p-around_medium">
+
+                        <lightning-input
+                            name="nome"
+                            label="Nome da solicitação"
+                            value={nome}
+                            onchange={handleInputChange}
+                            required>
+                        </lightning-input>
+
+                        <lightning-combobox
+                            name="categoria"
+                            label="Categoria"
+                            value={categoria}
+                            options={opcoesCategoria}
+                            onchange={handleInputChange}
+                            required>
+                        </lightning-combobox>
+
+
+                    <lightning-combobox
+                        name="prioridade"
+                        label="Prioridade"
+                        value={prioridade}
+                        options={opcoesPrioridade}
+                        onchange={handleInputChange}
+                        disabled={camposSomenteLeitura}
+                        required>
+                    </lightning-combobox>
+
+
+                        <lightning-textarea
+                            name="descricao"
+                            label="Descrição"
+                            value={descricao}
+                            onchange={handleInputChange}>
+                        </lightning-textarea>
+
+                        <template if:true={ehResponsavel}>
+                            <lightning-combobox
+                                name="responsavelId"
+                                label="Responsável"
+                                value={responsavelId}
+                                options={opcoesResponsavel}
+                                onchange={handleInputChange}
+                                placeholder="Selecione um responsável">
+                            </lightning-combobox>
+                        </template>
+
+ 
+                <lightning-input
+                    type="date"
+                    name="dataLimite"
+                    label="Data limite"
+                    value={dataLimite}
+                    onchange={handleInputChange}
+                    disabled={camposSomenteLeitura}>
+                </lightning-input>
+
+
+                        <lightning-input
+                            type="number"
+                            name="valor"
+                            label="Valor"
+                            step="0.01"
+                            value={valor}
+                            onchange={handleInputChange}>
+                        </lightning-input>
+
+                        <lightning-textarea
+                            name="justificativa"
+                            label="Justificativa"
+                            value={justificativa}
+                            onchange={handleInputChange}>
+                        </lightning-textarea>
+
+                        <template lwc:if={mensagemSucesso}>
+                            <div
+                                class="slds-text-color_success slds-m-top_medium"
+                                role="status">
+                                {mensagemSucesso}
+                            </div>
+                        </template>
+
+                        <template lwc:if={erro}>
+                            <div
+                                class="slds-text-color_error slds-m-top_medium"
+                                role="alert">
+                                Não foi possível salvar a solicitação.
+                                Verifique os dados e as permissões.
+                            </div>
+                        </template>
+
+                    </div>
+
+                    <footer class="slds-modal__footer">
+                        <lightning-button
+                            label="Cancelar"
+                            onclick={handleFecharModal}
+                            disabled={salvando}>
+                        </lightning-button>
+
+                        <lightning-button
+                            class="slds-m-left_small"
+                            label={textoBotaoSalvar}
+                            variant="brand"
+                            onclick={handleSalvar}
+                            disabled={salvando}>
+                        </lightning-button>
+                    </footer>
+
+                </div>
+            </section>
+
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </template>
+
+        <!-- Tabela de solicitações. -->
+        <template lwc:if={solicitacoes.length}>
+            <div class="slds-p-around_medium">
+                <c-solicitacao-datatable
+                    key-field="Id"
+                    data={solicitacoes}
+                    columns={colunas}
+                    hide-checkbox-column
+                    onrowaction={handleRowAction}>
+                </c-solicitacao-datatable>
+            </div>
+        </template>
+
+        <template lwc:else>
+            <template lwc:if={erro}>
+                <div
+                    class="slds-p-around_medium slds-text-color_error"
+                    role="alert">
+                    Não foi possível carregar as solicitações.
+                </div>
+            </template>
+
+            <template lwc:else>
+                <div class="slds-p-around_medium">
+                    Nenhuma solicitação encontrada.
+                </div>
+            </template>
+        </template>
+
+        <!-- Modal de confirmação de exclusão. -->
+        <template lwc:if={mostrarConfirmacaoExclusao}>
+            <section
+                role="dialog"
+                tabindex="-1"
+                aria-modal="true"
+                aria-labelledby="titulo-exclusao"
+                class="slds-modal slds-fade-in-open">
+
+                <div class="slds-modal__container">
+
+                    <header class="slds-modal__header">
+                        <h2
+                            id="titulo-exclusao"
+                            class="slds-text-heading_medium">
+                            Confirmar exclusão
+                        </h2>
+                    </header>
+
+                    <div class="slds-modal__content slds-p-around_medium">
+                        <p>
+                            Tem certeza de que deseja excluir a solicitação
+                            <strong>{nomeSolicitacaoExclusao}</strong>?
+                        </p>
+
+                        <p class="slds-m-top_small">
+                            Esta ação não poderá ser desfeita.
+                        </p>
+                    </div>
+
+                    <footer class="slds-modal__footer">
+                        <lightning-button
+                            label="Cancelar"
+                            onclick={handleCancelarExclusao}
+                            disabled={excluindo}>
+                        </lightning-button>
+
+                        <lightning-button
+                            class="slds-m-left_small"
+                            label="Excluir"
+                            variant="destructive"
+                            onclick={handleConfirmarExclusao}
+                            disabled={excluindo}>
+                        </lightning-button>
+                    </footer>
+
+                </div>
+            </section>
+
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </template>
+
+        <!-- Modal de confirmação de cancelamento. -->
+        <template lwc:if={mostrarConfirmacaoCancelamento}>
+            <section
+                role="dialog"
+                tabindex="-1"
+                aria-modal="true"
+                aria-labelledby="titulo-cancelamento"
+                class="slds-modal slds-fade-in-open">
+
+                <div class="slds-modal__container">
+
+                    <header class="slds-modal__header">
+                        <h2
+                            id="titulo-cancelamento"
+                            class="slds-text-heading_medium">
+                            Confirmar cancelamento
+                        </h2>
+                    </header>
+
+                    <div class="slds-modal__content slds-p-around_medium">
+                        <p>
+                            Deseja realmente cancelar a solicitação
+                            <strong>{nomeSolicitacaoCancelamento}</strong>?
+                        </p>
+
+                        <p class="slds-m-top_small">
+                            O registro será preservado, mas seu status mudará
+                            para Cancelada.
+                        </p>
+                    </div>
+
+                    <footer class="slds-modal__footer">
+                        <lightning-button
+                            label="Voltar"
+                            onclick={handleCancelarCancelamento}
+                            disabled={cancelando}>
+                        </lightning-button>
+
+                        <lightning-button
+                            class="slds-m-left_small"
+                            label="Confirmar cancelamento"
+                            variant="destructive"
+                            onclick={handleConfirmarCancelamento}
+                            disabled={cancelando}>
+                        </lightning-button>
+                    </footer>
+
+                </div>
+            </section>
+
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </template>
+
+    </lightning-card>
+</template>

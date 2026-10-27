@@ -1,0 +1,52 @@
+/* Estilo base das etiquetas de status. */
+.status-badge {
+    display: inline-block;
+    padding: 0.25rem 0.65rem;
+    border-radius: 1rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1.4;
+    white-space: nowrap;
+}
+
+/* Azul: solicitação nova. */
+.status-nova {
+    color: #1d4ed8;
+    background-color: #dbeafe;
+}
+
+/* Amarelo: solicitação em análise. */
+.status-analise {
+    color: #92400e;
+    background-color: #fef3c7;
+}
+
+/* Verde: solicitação aprovada. */
+.status-aprovada {
+    color: #166534;
+    background-color: #dcfce7;
+}
+
+/* Vermelho: solicitação rejeitada. */
+.status-rejeitada {
+    color: #991b1b;
+    background-color: #fee2e2;
+}
+
+/* Cinza: solicitação cancelada. */
+.status-cancelada {
+    color: #475569;
+    background-color: #e2e8f0;
+}
+
+/* Verde-azulado: solicitação concluída. */
+.status-concluida {
+    color: #115e59;
+    background-color: #ccfbf1;
+}
+
+/* Cor neutra para status não reconhecidos. */
+.status-padrao {
+    color: #374151;
+    background-color: #f3f4f6;
+}

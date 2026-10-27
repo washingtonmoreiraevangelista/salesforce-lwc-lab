@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Solicitante__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <description>Identifica o usuário que registrou ou solicitou a demanda.</description>
+    <label>Solicitante</label>
+    <referenceTo>User</referenceTo>
+    <relationshipName>Solicita_es</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>
